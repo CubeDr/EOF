@@ -7,9 +7,11 @@ import kr.ac.hanyang.eos.eof.R;
 
 public class GameActivity extends AppCompatActivity {
 
+    private GameView gameView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(gameView = new GameView(this));
     }
 }
