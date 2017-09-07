@@ -14,8 +14,12 @@ public abstract class Player {
     // image width, height
     private int w, h;
 
+    private boolean started = false;
+
     // Player position
     private int x=Integer.MAX_VALUE, y=Integer.MAX_VALUE;
+    // Canvas size (Player movement boundary)
+    private int cw, ch;
 
     // Movement location
     private float lastX=-1, lastY;
@@ -52,6 +56,12 @@ public abstract class Player {
                 x += nx - lastX;
                 y += ny - lastY;
 
+                // Check boundary
+                if(x < w/2) x = w/2;
+                if(y < h/2) y = h/2;
+                if(x > cw-w/2) x = cw-w/2;
+                if(y > ch-h/2) y = ch-h/2;
+
                 lastX = nx;
                 lastY = ny;
                 break;
@@ -60,11 +70,21 @@ public abstract class Player {
 
     // Draw player
     public final void draw(Canvas canvas) {
+        if(!started) {
+            cw = canvas.getWidth();
+            ch = canvas.getHeight();
+            startPlayer();
+        }
+
         if(x == Integer.MAX_VALUE && y == Integer.MAX_VALUE) {
             x = canvas.getWidth()/2;
             y = canvas.getHeight()/2;
         }
 
         canvas.drawBitmap(playerImage, x-w/2, y-h/2, null);
+    }
+
+    private final void startPlayer() {
+        started = true;
     }
 }
