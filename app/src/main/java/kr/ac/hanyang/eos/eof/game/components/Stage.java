@@ -1,4 +1,4 @@
-package kr.ac.hanyang.eos.eof.game;
+package kr.ac.hanyang.eos.eof.game.components;
 
 import android.graphics.Canvas;
 
