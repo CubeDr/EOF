@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import kr.ac.hanyang.eos.eof.R;
 
@@ -13,7 +15,7 @@ import kr.ac.hanyang.eos.eof.R;
  * Created by space on 2017-09-06.
  */
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends SurfaceView implements View.OnTouchListener, SurfaceHolder.Callback {
 
     private Context context;
     private SurfaceHolder holder;
@@ -26,22 +28,28 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         holder.addCallback(this);
         this.context = context;
         this.thread = new GameThread();
+
+        setOnTouchListener(this);
     }
 
     @Override
-    public void surfaceCreated(SurfaceHolder holder) {
+    public boolean onTouch(View v, MotionEvent event) {
+        switch(event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+        }
+        return true;
+    }
+
+    @Override public void surfaceCreated(SurfaceHolder holder) {
         thread.start();
     }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-
-    }
+    @Override public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) { }
+    @Override public void surfaceDestroyed(SurfaceHolder holder) { }
 
     class GameThread extends Thread {
         private Bitmap background;
