@@ -18,8 +18,4 @@ public class ExampleLevel extends Level {
         setBackgroundImage(BitmapFactory.decodeResource(Engine.getResources(), R.drawable.background));
     }
 
-    @Override
-    public void startLevel() {
-
-    }
 }

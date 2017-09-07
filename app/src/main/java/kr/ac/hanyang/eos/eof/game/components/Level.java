@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 
@@ -14,11 +15,21 @@ import kr.ac.hanyang.eos.eof.game.GameView;
  */
 
 public abstract class Level {
-    public int level;
-    public String[] developers;
+    private int level;
+    private String[] developers;
 
     private Bitmap background;
     private boolean isBackgroundResized = false;
+
+    private long startTime;
+    private boolean isStarting = false;
+    private Paint titlePaint;
+    private Paint titleShadowPaint;
+
+    int endX;
+    int midX = -1;
+    int startX = -1;
+    int y = -1;
 
     private Paint scorePaint;
 
@@ -31,6 +42,16 @@ public abstract class Level {
     public Level(int difficulty, String[] developers) {
         this.level = difficulty;
         this.developers = developers;
+
+        titlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTextSize(150);
+        titlePaint.setColor(Color.GRAY);
+
+        titleShadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        titleShadowPaint.setTextSize(150);
+        titleShadowPaint.setColor(Color.DKGRAY);
+
+        endX = - (int) titlePaint.measureText("Level");
 
         scorePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         scorePaint.setTextSize(80);
@@ -60,6 +81,7 @@ public abstract class Level {
     public void draw(Canvas canvas) {
         drawBackground(canvas);
         drawScore(canvas);
+        drawStartingAnimation(canvas);
     }
 
     private void drawBackground(Canvas canvas) {
@@ -74,9 +96,42 @@ public abstract class Level {
     }
 
     private void drawScore(Canvas canvas) {
-        canvas.drawText(String.valueOf(score), 20, 40, scorePaint);
+        canvas.drawText(String.valueOf(score), 20, 80, scorePaint);
         score++;
     }
 
-    public abstract void startLevel();
+    private void drawStartingAnimation(Canvas canvas) {
+        if (!isStarting) return;
+
+        int passed = (int) (System.currentTimeMillis() - startTime);
+        if (passed >= 2000)
+            isStarting = false;
+
+        if (y == -1) {
+            midX = canvas.getWidth() / 2 + endX / 2;
+            startX = canvas.getWidth() - endX;
+            y = canvas.getHeight() / 2;
+        }
+
+        int x;
+        if (passed <= 1000)
+            x = -1000;
+        else if (passed <= 1100) {
+            passed -= 1000;
+        x = (startX * (100 - passed) + midX * passed) / 100;
+        } else if( passed <= 1900 )
+            x = midX;
+        else {
+            passed -= 1900;
+            x = ( midX*(100-passed) + endX*passed ) / 100;
+        }
+
+        canvas.drawText("Level", x+5, y+5, titleShadowPaint);
+        canvas.drawText("Level", x, y, titlePaint);
+    }
+
+    public void startLevel() {
+        startTime = System.currentTimeMillis();
+        isStarting = true;
+    }
 }

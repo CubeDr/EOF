@@ -55,6 +55,7 @@ public class GameView extends SurfaceView implements View.OnTouchListener, Surfa
         @Override
         public void run() {
             Canvas canvas;
+            levels[currentLevel].startLevel();
             while(true) {
                 canvas = holder.lockCanvas();
 
