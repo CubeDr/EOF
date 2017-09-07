@@ -1,6 +1,8 @@
 package kr.ac.hanyang.eos.eof.game.components;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.view.MotionEvent;
 
 /**
@@ -8,17 +10,41 @@ import android.view.MotionEvent;
  */
 
 public abstract class Stage {
-    public int stage;
-    public String developer;
+    private int stage;
+    private String developer;
+
+    private boolean started = false;
+    private long startTime;
+
+    private Paint titlePaint;
+    private int tX=-1, tW, tY;
 
     public Stage(int stage, String developer) {
         this.stage = stage;
         this.developer = developer;
+
+        titlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        titlePaint.setTextSize(80);
+        titlePaint.setColor(Color.WHITE);
+        tW = (int) titlePaint.measureText("Stage " + stage);
+        tY = 80;
+    }
+
+    public final void drawStage(Canvas canvas) {
+        if(!started) startStage();
+        if(tX == -1) tX = canvas.getWidth() - tW-10;
+        canvas.drawText("Stage " + stage, tX, tY, titlePaint);
     }
 
     final void onTouchEvent(MotionEvent event) {
 
     }
 
-    public abstract void drawStage(Canvas canvas);
+    private final void startStage() {
+        started = true;
+        startTime = System.currentTimeMillis();
+        onStart();
+    }
+
+    protected abstract void onStart();
 }

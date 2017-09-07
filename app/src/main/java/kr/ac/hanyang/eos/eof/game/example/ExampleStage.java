@@ -17,11 +17,7 @@ public class ExampleStage extends Stage {
     }
 
     @Override
-    public void drawStage(Canvas canvas) {
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.RED);
-        paint.setTextSize(200);
+    protected void onStart() {
 
-        canvas.drawText("STAGE!!", 100, 300, paint);
     }
 }

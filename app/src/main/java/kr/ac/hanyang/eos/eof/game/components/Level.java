@@ -93,11 +93,8 @@ public abstract class Level {
             currentStage.onTouchEvent(event);
     }
 
-    public void draw(Canvas canvas) {
-        if(!started) {
-            started = true;
-            startLevel();
-        }
+    public final void draw(Canvas canvas) {
+        if(!started) startLevel();
 
         drawBackground(canvas);
         drawScore(canvas);
@@ -108,7 +105,7 @@ public abstract class Level {
         }
     }
 
-    private void drawBackground(Canvas canvas) {
+    private final void drawBackground(Canvas canvas) {
         if(background != null) {
             if(!isBackgroundResized) {
                 background = Bitmap.createScaledBitmap(background, canvas.getWidth(), canvas.getHeight(), false);
@@ -119,12 +116,12 @@ public abstract class Level {
         }
     }
 
-    private void drawScore(Canvas canvas) {
+    private final void drawScore(Canvas canvas) {
         canvas.drawText(String.valueOf(score), 20, 80, scorePaint);
         score++;
     }
 
-    private void drawStartingAnimation(Canvas canvas) {
+    private final void drawStartingAnimation(Canvas canvas) {
         if (!isStarting) return;
 
         int passed = (int) (System.currentTimeMillis() - startTime);
@@ -154,7 +151,8 @@ public abstract class Level {
         canvas.drawText("Level", x, y, titlePaint);
     }
 
-    private void startLevel() {
+    private final void startLevel() {
+        started = true;
         startTime = System.currentTimeMillis();
         isStarting = true;
         onStart();
