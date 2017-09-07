@@ -16,6 +16,11 @@ public class ExampleLevel extends Level {
     public ExampleLevel() {
         super(0, new String[]{ "김현이" });
         setBackgroundImage(BitmapFactory.decodeResource(Engine.getResources(), R.drawable.background));
+        addStage(new ExampleStage());
     }
 
+    @Override
+    protected void onStart() {
+
+    }
 }

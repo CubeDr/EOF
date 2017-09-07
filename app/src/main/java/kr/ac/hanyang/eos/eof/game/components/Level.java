@@ -8,6 +8,8 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 
+import java.util.ArrayList;
+
 import kr.ac.hanyang.eos.eof.game.GameView;
 
 /**
@@ -21,6 +23,8 @@ public abstract class Level {
     private Bitmap background;
     private boolean isBackgroundResized = false;
 
+    private boolean started = false;
+
     private long startTime;
     private boolean isStarting = false;
     private Paint titlePaint;
@@ -32,8 +36,10 @@ public abstract class Level {
     int y = -1;
 
     private Paint scorePaint;
-
     private int score = 0;
+
+    private ArrayList<Stage> stages;
+    private Stage currentStage;
 
     public Level(int difficulty) {
         this(difficulty, new String[]{});
@@ -56,6 +62,8 @@ public abstract class Level {
         scorePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         scorePaint.setTextSize(80);
         scorePaint.setColor(Color.WHITE);
+
+        stages = new ArrayList<>();
     }
 
     protected final void setBackgroundImage(Bitmap background) {
@@ -74,14 +82,30 @@ public abstract class Level {
         return score;
     }
 
-    public final void onTouchEvent(MotionEvent event) {
+    protected final void addStage(Stage stage) {
+        stages.add(stage);
+        if(currentStage == null)
+            currentStage = stage;
+    }
 
+    public final void onTouchEvent(MotionEvent event) {
+        if(currentStage != null)
+            currentStage.onTouchEvent(event);
     }
 
     public void draw(Canvas canvas) {
+        if(!started) {
+            started = true;
+            startLevel();
+        }
+
         drawBackground(canvas);
         drawScore(canvas);
-        drawStartingAnimation(canvas);
+        if(isStarting) drawStartingAnimation(canvas);
+        else {
+            if(currentStage != null)
+                currentStage.drawStage(canvas);
+        }
     }
 
     private void drawBackground(Canvas canvas) {
@@ -130,8 +154,11 @@ public abstract class Level {
         canvas.drawText("Level", x, y, titlePaint);
     }
 
-    public void startLevel() {
+    private void startLevel() {
         startTime = System.currentTimeMillis();
         isStarting = true;
+        onStart();
     }
+
+    protected abstract void onStart();
 }
