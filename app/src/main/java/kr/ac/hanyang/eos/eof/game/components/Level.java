@@ -74,7 +74,7 @@ public abstract class Level {
         return score;
     }
 
-    final void onTouchEvent(MotionEvent event) {
+    public final void onTouchEvent(MotionEvent event) {
 
     }
 

@@ -40,7 +40,8 @@ public class GameView extends SurfaceView implements View.OnTouchListener, Surfa
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
+        if(levels != null && currentLevel>=0 && currentLevel < levels.length && levels[currentLevel]!=null)
+            levels[currentLevel].onTouchEvent(event);
         return true;
     }
 
