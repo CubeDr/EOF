@@ -21,5 +21,5 @@ public abstract class Level {
     }
 
     public abstract void startLevel();
-    public abstract boolean drawLevel(Canvas canvas);
+    public abstract void drawLevel(Canvas canvas);
 }
