@@ -2,6 +2,7 @@ package kr.ac.hanyang.eos.eof.game.components;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.view.MotionEvent;
 
 /**
  * Created by space on 2017-09-07.
@@ -27,6 +28,10 @@ public abstract class Player {
     protected void moveTo(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    void onTouchEvent(MotionEvent event) {
+
     }
 
     // Draw player

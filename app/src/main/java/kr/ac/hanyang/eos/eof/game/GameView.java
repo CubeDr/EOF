@@ -1,15 +1,14 @@
 package kr.ac.hanyang.eos.eof.game;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 import android.view.View;
 
-import kr.ac.hanyang.eos.eof.R;
+import kr.ac.hanyang.eos.eof.game.components.Level;
+import kr.ac.hanyang.eos.eof.game.example.ExampleLevel;
 
 /**
  * Created by space on 2017-09-06.
@@ -21,6 +20,9 @@ public class GameView extends SurfaceView implements View.OnTouchListener, Surfa
     private SurfaceHolder holder;
     private GameThread thread;
 
+    private Level[] levels;
+    int currentLevel;
+
     public GameView(Context context) {
         super(context);
 
@@ -29,19 +31,17 @@ public class GameView extends SurfaceView implements View.OnTouchListener, Surfa
         this.context = context;
         this.thread = new GameThread();
 
+        levels = new Level[] {
+            new ExampleLevel()
+        };
+        currentLevel = 0;
+
         setOnTouchListener(this);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        switch(event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                break;
-            case MotionEvent.ACTION_UP:
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-        }
+
         return true;
     }
 
@@ -52,11 +52,6 @@ public class GameView extends SurfaceView implements View.OnTouchListener, Surfa
     @Override public void surfaceDestroyed(SurfaceHolder holder) { }
 
     class GameThread extends Thread {
-        private Bitmap background;
-
-        GameThread() {
-            background = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
-        }
 
         @Override
         public void run() {
@@ -66,7 +61,9 @@ public class GameView extends SurfaceView implements View.OnTouchListener, Surfa
 
                 try {
                     synchronized (holder) {
-                        canvas.drawBitmap(background, 0, 0, null);
+                        if(levels!=null && currentLevel >= 0 && currentLevel < levels.length && levels[currentLevel]!=null) {
+                            levels[currentLevel].draw(canvas);
+                        }
                     }
                 } finally {
                     if(canvas != null) holder.unlockCanvasAndPost(canvas);
