@@ -15,7 +15,6 @@ import kr.ac.hanyang.eos.eof.game.example.ExampleLevel;
  */
 
 public class GameView extends SurfaceView implements View.OnTouchListener, SurfaceHolder.Callback {
-
     private Context context;
     private SurfaceHolder holder;
     private GameThread thread;
