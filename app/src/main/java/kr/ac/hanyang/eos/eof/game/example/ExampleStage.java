@@ -14,6 +14,8 @@ public class ExampleStage extends Stage {
 
     public ExampleStage() {
         super(1, "김현이");
+
+        setPlayer(new ExamplePlayer());
     }
 
     @Override

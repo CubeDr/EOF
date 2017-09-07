@@ -97,12 +97,12 @@ public abstract class Level {
         if(!started) startLevel();
 
         drawBackground(canvas);
-        drawScore(canvas);
         if(isStarting) drawStartingAnimation(canvas);
         else {
             if(currentStage != null)
                 currentStage.drawStage(canvas);
         }
+        drawScore(canvas);
     }
 
     private final void drawBackground(Canvas canvas) {
