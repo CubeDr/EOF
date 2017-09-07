@@ -9,6 +9,10 @@ import android.view.MotionEvent;
  */
 
 public abstract class Player {
+    private final static int
+        STATE_STARTING_ANIMATION = 0,
+        STATE_MOVING = 1,
+        STATE_ENDING_ANIMATION = 2;
     // Player image
     private Bitmap playerImage;
     // image width, height
@@ -24,6 +28,11 @@ public abstract class Player {
     // Movement location
     private float lastX=-1, lastY;
 
+    private int state = -1;
+
+    // Starting animation
+    private long animationStartTime;
+
     public Player(Bitmap playerImage) {
         this.playerImage = playerImage;
         w = playerImage.getWidth();
@@ -31,7 +40,8 @@ public abstract class Player {
     }
 
     private final void beginStartAnimation() {
-
+        state = STATE_STARTING_ANIMATION;
+        animationStartTime = System.currentTimeMillis();
     }
 
     // Move player to the target position in instant
@@ -41,6 +51,8 @@ public abstract class Player {
     }
 
     final void onTouchEvent(MotionEvent event) {
+        if(state != STATE_MOVING) return;
+
         switch(event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 lastX = event.getX();
@@ -52,6 +64,11 @@ public abstract class Player {
             case MotionEvent.ACTION_MOVE:
                 float nx = event.getX();
                 float ny = event.getY();
+
+                if(lastX == -1) {
+                    lastX = nx;
+                    lastY = ny;
+                }
 
                 x += nx - lastX;
                 y += ny - lastY;
@@ -76,9 +93,23 @@ public abstract class Player {
             startPlayer();
         }
 
-        if(x == Integer.MAX_VALUE && y == Integer.MAX_VALUE) {
-            x = canvas.getWidth()/2;
-            y = canvas.getHeight()/2;
+        switch(state) {
+            case STATE_STARTING_ANIMATION:
+                int start = (int)(System.currentTimeMillis() - animationStartTime);
+
+                if(start >= 1000) {
+                    state = STATE_MOVING;
+                    start = 1000;
+                }
+
+                x = cw/2;
+                y = ch + h - start* h * 2 / 1000;
+
+                break;
+            case STATE_MOVING:
+                break;
+            case STATE_ENDING_ANIMATION:
+                break;
         }
 
         canvas.drawBitmap(playerImage, x-w/2, y-h/2, null);
@@ -86,5 +117,6 @@ public abstract class Player {
 
     private final void startPlayer() {
         started = true;
+        beginStartAnimation();
     }
 }
